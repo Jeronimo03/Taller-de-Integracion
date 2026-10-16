@@ -1,0 +1,36 @@
+flowchart TD
+    %% Inicio
+    A([Inicio: Usuario abre el Chatbot]) --> AA{Compruebo si esta registrado} -- Si (Valida) --> B[Mensaje de Bienvenida con nombre + Menú Principal]
+    AA -- No (Valida)--> AB[Mensaje de Bienvenida + Menú Principal]
+    AC --> C[/Usuario ingresa una consulta o texto/]
+    B --> AC{Contador de errores inicia en 10}
+    AB --> AD{Contador de errores se inicializa en 3} 
+    AD --> C
+    %% Inicialización o lectura de contador
+    C --> D{"¿Es una consulta sobre la Librería?\n(Validación de Dominio/Tema)"}
+
+    %% RUTA ACEPTABLE: Sobre el negocio o la librería
+    D -- Sí (Válida) --> F{Clasificar Tipo de Consulta}
+
+    F -- Horarios / Ubicación --> G1[Mostrar dirección, horarios y medios de pago]
+    F -- Buscar Producto / Stock --> G2[Consultar Catálogo y mostrar resultados]
+    F -- Ayuda para Comprar --> G3[Mostrar guía paso a paso para hacer el pedido]
+    
+    G1 --> H{¿Desea hacer otra consulta?}
+    G2 --> H
+    G3 --> H
+
+    H -- Sí --> C
+    H -- No --> Z([Cierre: ¡Gracias por usar la Librería!])
+
+    %% RUTA NO ACEPTABLE / OTRO TEMA / NO ENTENDIDA
+    D -- No (Fuera de tema o no clasificada) --> I[Incrementar Contador: Intentos = Intentos + 1]
+    I --> J{"¿Intentos superados?"}
+
+    J -- CLIENTE --> JA[Derivación:\n'Has superado el límite de intentos con temas no relacionados. Te derivamos a atención por WhatsApp/Email.']
+    JA --> Z
+    J -- No --> K["Mensaje de Advertencia:\n'Solo puedo responder consultas sobre la librería, libros y pedidos. Por favor intenta de nuevo.'"]
+    K --> C
+
+    J -- No CLIENTE --> L{Bloqueo Temporal}
+    L --> Z
